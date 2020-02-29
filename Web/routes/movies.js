@@ -4,6 +4,15 @@ const router = express.Router();
 //models
 const Movie=require('../models/Movie')
 
+router.get('/',(req,res)=>{
+  const promise = Movie.find({ });
+  promise.then((data)=>{
+    res.json(data);
+  }).catch((err)=>{
+    res.json(err);
+  })
+})
+
 router.post('/', (req, res, next) => {
   //request ile gönderdiğimiz post datasını değişkene atadık.
   //böyle ayrı ayrı yazmamızın sebebi direkt title yada category diye yazarak gelen dataya ulaşabiliriz.
