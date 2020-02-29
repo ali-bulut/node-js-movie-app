@@ -13,15 +13,27 @@ router.get('/',(req,res)=>{
   })
 })
 
-router.get('/:movie_id',(req,res)=>{
+router.get('/:movie_id',(req,res, next)=>{
   //req.params.movie_id ile linkte girilen movie id'ye erişiriz.
   const promise=Movie.findById(req.params.movie_id);
 
   promise.then((movie)=>{
+
+    //id 12 haneli olup fakat movie datası bulunamadıysa
+    if(!movie)
+    //next methodu ile error handling middleware'ine gider.
+      next({message:'The movie was not found!'});
+    
+    
     res.json(movie);
-  }).catch((err)=>{
-    res.json(err);
+    
+
+    //id'si 12 haneli zaten değilse direkt buna düşer
+  }).catch(()=>{
+    next({message: 'The movie was not found!'});
   })
+
+  
 })
 
 router.post('/', (req, res, next) => {
