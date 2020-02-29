@@ -62,9 +62,11 @@ router.post('/login',(req,res)=>{
           })
         }
         else{
+          //token payload oluşturma
           const payload={
             username:username
           }
+          //tokenı oluşturma. token payload ve girdiğimiz gizli anahtarın birleşiminden oluşur
           const token=jwt.sign(payload,req.app.get('api_secret_key'),{
             expiresIn:720 //12 saat
           })
