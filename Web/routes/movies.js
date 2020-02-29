@@ -24,17 +24,47 @@ router.get('/:movie_id',(req,res, next)=>{
     //next methodu ile error handling middleware'ine gider.
       next({message:'The movie was not found!'});
     
-    
     res.json(movie);
-    
 
     //id'si 12 haneli zaten değilse direkt buna düşer
   }).catch(()=>{
     next({message: 'The movie was not found!'});
   })
-
-  
 })
+
+router.put('/:movie_id',(req,res, next)=>{
+  //req.body ile istek olarak gelen datayı otomatik olarak güncelleriz.
+  const promise=Movie.findByIdAndUpdate(req.params.movie_id, req.body, {new:true});
+  promise.then((movie)=>{
+    if(!movie)
+      next({message:'The movie was not found!'});
+
+      res.json(movie);
+
+    //güncellenmiş datayı sayfaya basmamız için bunu yazdık.
+    //Güncelleme: bunu böyle yazmak yerine promise değişkenine 3.parametre olarak new:true verirsek de aynı işlem olur.
+    // Movie.findById(req.params.movie_id).then((data)=>{
+    //   res.json(data);
+    // });
+
+  }).catch(()=>{
+    next({message: 'The movie was not found!'});
+  })
+})
+
+
+router.delete('/:movie_id',(req,res, next)=>{
+  const promise=Movie.findByIdAndRemove(req.params.movie_id);
+
+  promise.then((movie)=>{
+    if(!movie)
+      next({message:'The movie was not found!'});
+    res.json({status:1});
+  }).catch(()=>{
+    next({message: 'The movie was not found!'});
+  })
+})
+
 
 router.post('/', (req, res, next) => {
   //request ile gönderdiğimiz post datasını değişkene atadık.
@@ -72,12 +102,42 @@ router.post('/', (req, res, next) => {
 
   promise
   .then((data)=>{
-     res.json({status:1});
+     res.json(data);
   })
   .catch((err)=>{
     res.json(err);
   })
 
 });
+
+//Imdb Top 10 List
+
+router.get('/imdb/top10',(req,res)=>{
+  const promise = Movie.find({ }).limit(10).sort({imdb_score:-1});
+  promise.then((data)=>{
+    res.json(data);
+  }).catch((err)=>{
+    res.json(err);
+  })
+})
+
+// Between 2 different years
+
+router.get('/between/:start_year/:end_year',(req,res)=>{
+  const {start_year , end_year}=req.params;
+  const promise = Movie.find({ 
+    //gte -> büyük eşit   lte -> küçük eşit
+    //gt -> büyük         lt -> küçük
+    //yani year'ı start_year'dan büyük veya eşit fakat end_year'dan küçük veya eşit olan filmler find ile bulunacak.
+    //parseInt ile route'tan gelen string datayı int'e çevirdik.
+     year:{ "$gte": parseInt(start_year), "$lte": parseInt(end_year) }
+  });
+  promise.then((data)=>{
+    res.json(data);
+  }).catch((err)=>{
+    res.json(err);
+  })
+})
+
 
 module.exports = router;
