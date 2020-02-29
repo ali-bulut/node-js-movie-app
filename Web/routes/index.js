@@ -4,6 +4,9 @@ const router = express.Router();
 //girilen şifreyi şifreleyerek db'ye kayıt etmek için npm'den bu modülü kuruyoruz
 const bcrypt=require('bcryptjs');
 
+//jwt'yi dahil ettik.
+const jwt=require('jsonwebtoken');
+
 //Models
 const User=require('../models/User');
 
@@ -37,5 +40,43 @@ router.post('/register', (req, res, next) => {
 
   
 });
+
+router.post('/login',(req,res)=>{
+  const {username, password}=req.body;
+
+  User.findOne({
+    username:username
+  },(err,user)=>{
+    if(err)
+      throw err;
+
+    if(!user){
+      res.json({status:false, message:'Login failed! User was not found.'})
+    }
+    else{
+      bcrypt.compare(password,user.password).then((result)=>{
+        if(!result){
+          res.json({
+            status:false,
+            message:'Login failed! Wrong password.'
+          })
+        }
+        else{
+          const payload={
+            username:username
+          }
+          const token=jwt.sign(payload,req.app.get('api_secret_key'),{
+            expiresIn:720 //12 saat
+          })
+
+          res.json({
+            status:true,
+            token:token
+          })
+        }
+      })
+    }
+  })
+})
 
 module.exports = router;

@@ -15,6 +15,12 @@ const app = express();
 // sonunda eklediğimiz () ile db.js dosyasında export ettiğimiz functionu çalıştırabiliriz.
 const db=require('./helper/db')();
 
+//Config -> api_secret_key
+const config=require('./config')
+//global bir atama yapmak için kullandık. api_secret_key field'ını artık;
+//req.app.get('api_secret_key') ile ulaşarak her yerde kullanabiliriz.
+app.set('api_secret_key',config.api_secret_key);
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -44,5 +50,7 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.json({error: err.message});
 });
+
+
 
 module.exports = app;
