@@ -13,6 +13,17 @@ router.get('/',(req,res)=>{
   })
 })
 
+router.get('/:movie_id',(req,res)=>{
+  //req.params.movie_id ile linkte girilen movie id'ye erişiriz.
+  const promise=Movie.findById(req.params.movie_id);
+
+  promise.then((movie)=>{
+    res.json(movie);
+  }).catch((err)=>{
+    res.json(err);
+  })
+})
+
 router.post('/', (req, res, next) => {
   //request ile gönderdiğimiz post datasını değişkene atadık.
   //böyle ayrı ayrı yazmamızın sebebi direkt title yada category diye yazarak gelen dataya ulaşabiliriz.
