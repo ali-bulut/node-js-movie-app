@@ -3,8 +3,15 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www",
+    "//":[
+      "npm start yazdığında nodemon aracılığıyla proje çalışmaya başlar",
+      "npm test yazdığındda mocha çalışır ve proje'nin unit test işlemleri yapılır.",
+      "--exit -> komutu çalıştırdıktan sonra oto kapatır. -- recursive -> test folder'ı altındaki tüm folderlara erişimi olur. Hepsinin altındaki test dosyalarını görür."
+    ],
+    "test":"mocha --exit --recursive"
   },
+  
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookie-parser": "~1.4.4",
@@ -15,5 +22,10 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.2",
     "morgan": "~1.9.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "mocha": "^7.1.0"
   }
 }
