@@ -3,12 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www",
-    "//":[
-      "npm start yazdığında nodemon aracılığıyla proje çalışmaya başlar",
-      "npm test yazdığındda mocha çalışır ve proje'nin unit test işlemleri yapılır.",
-      "--exit -> komutu çalıştırdıktan sonra oto kapatır. -- recursive -> test folder'ı altındaki tüm folderlara erişimi olur. Hepsinin altındaki test dosyalarını görür."
-    ],
+    "start": "node ./bin/www",
+    "start:dev": "nodemon ./bin/www",
     "test":"mocha --exit --recursive"
   },
   
