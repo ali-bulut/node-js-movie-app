@@ -6,7 +6,7 @@ const server=require('../../app');
 
 chai.use(chaiHttp);
 
-let token;
+let token, movieId;
 
 describe('/api/movies tests', ()=>{
     //before ile test işlemi başlamadan önce yapmak istediğimiz işlemleri yaparız.
@@ -49,7 +49,29 @@ describe('/api/movies tests', ()=>{
                 res.body.should.have.property('year');
                 res.body.should.have.property('imdb_score');
 
+                movieId=res.body._id;
+
                 done();
+            })
+        })
+    })
+
+    describe('/GET/:movieId movies', ()=>{
+        it('it should get movies by the given id',(done)=>{
+            chai.request(server).get('/api/movies/'+movieId).set('x-access-token',token).end((err,res)=>{
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('title');
+                res.body.should.have.property('director_id');
+                res.body.should.have.property('category');
+                res.body.should.have.property('country');
+                res.body.should.have.property('year');
+                res.body.should.have.property('imdb_score');
+                //body'deki _id property'si movieId'ye eşit olmalı
+                res.body.should.have.property('_id').eql(movieId);
+
+                done();
+
             })
         })
     })
